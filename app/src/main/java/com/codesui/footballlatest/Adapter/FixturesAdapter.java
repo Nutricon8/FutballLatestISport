@@ -67,9 +67,8 @@ public class FixturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             holder.itemView.setOnClickListener(view -> {
                 Intent leagueIntent = new Intent(FixturesAdapter.this.context, LeagueActivity.class);
-                leagueIntent.putExtra("competitionName", item.getLeagueName());
-                leagueIntent.putExtra("competitionId", item.getLeagueId());
-                leagueIntent.putExtra("competitionCode", item.getLeagueCode());
+                leagueIntent.putExtra("leagueName", item.getLeagueName());
+                leagueIntent.putExtra("leagueId", item.getLeagueId());
                 FixturesAdapter.this.context.startActivity(leagueIntent);
                 interstitialManager.showInterstitial(FixturesAdapter.this.activity);
             });
@@ -77,15 +76,15 @@ public class FixturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final Match match = item.getMatch();
             MatchViewHolder matchHolder = (MatchViewHolder) holder;
 
-            matchHolder.textHome.setText(match.getHomeTeam());
-            matchHolder.textAway.setText(match.getAwayTeam());
-            Picasso.get().load(match.getHomeImage()).placeholder(R.drawable.image5).error(R.drawable.image5).into(matchHolder.homeImage);
-            Picasso.get().load(match.getAwayImage()).placeholder(R.drawable.image5).error(R.drawable.image5).into(matchHolder.awayImage);
+            matchHolder.textHome.setText(match.getHomeTeamName());
+            matchHolder.textAway.setText(match.getAwayTeamName());
+            Picasso.get().load(match.getHomeTeamLogo()).placeholder(R.drawable.image5).error(R.drawable.image5).into(matchHolder.homeImage);
+            Picasso.get().load(match.getAwayTeamLogo()).placeholder(R.drawable.image5).error(R.drawable.image5).into(matchHolder.awayImage);
             matchHolder.textHomeResult.setText(match.getHomeScore());
             matchHolder.textAwayResult.setText(match.getAwayScore());
-            matchHolder.time.setText(DateUtils.convertUtcToLocalTime(match.getDate()));
+            //matchHolder.time.setText(DateUtils.convertUtcToLocalTime(match.getDate()));
 
-            String status = match.getStatus();
+            /*String status = match.getStatus();
             if (status.equals("LIVE") || status.equals("FINISHED") || status.equals("IN_PLAY") || status.equals("PAUSED")) {
                 //matchHolder.duration.setText(status.equals("FINISHED") ? context.getString(R.string.ft) : "🔥");
 
@@ -100,20 +99,17 @@ public class FixturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             } else {
-                /*matchHolder.duration.setText(
-                        status.equals("SCHEDULED") || status.equals("TIMED") || status.equals("POSTPONED") ? "🕒" : status
-                );*/
 
                 if (status.equals("SCHEDULED") || status.equals("TIMED") || status.equals("POSTPONED")) {
                     matchHolder.duration.setVisibility(View.GONE);
                 } else {
                     matchHolder.duration.setText(status);
                 }
-            }
+            }*/
 
             matchHolder.itemView.setOnClickListener(view -> {
                 Intent fixturesIntent = new Intent(context, MatchActivity.class);
-                fixturesIntent.putExtra("id", match.getId());
+                fixturesIntent.putExtra("id", match.getMatchId());
                 fixturesIntent.putExtra("status", match.getStatus());
                 context.startActivity(fixturesIntent);
                 interstitialManager.showInterstitial(activity);
@@ -163,7 +159,7 @@ public class FixturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public static List<FixtureItem> groupMatchesByLeague(List<Match> matches) {
         List<FixtureItem> result = new ArrayList<>();
-        Set<Integer> seenLeagues = new HashSet<>();
+        Set<String> seenLeagues = new HashSet<>();
 
         for (Match match : matches) {
             if (!seenLeagues.contains(match.getLeagueId())) {
@@ -171,10 +167,9 @@ public class FixturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 result.add(new FixtureItem(
                         FixtureItem.TYPE_HEADER,
                         match.getLeagueId(),
-                        match.getLeagueCode(),
-                        null,
+                        match,
                         match.getLeagueName(),
-                        match.getLeagueLogo()
+                        null
                 ));
                 seenLeagues.add(match.getLeagueId());
             }
@@ -183,9 +178,8 @@ public class FixturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             result.add(new FixtureItem(
                     FixtureItem.TYPE_MATCH,
                     match.getLeagueId(),
-                    match.getLeagueCode(),
                     match,
-                    null,
+                    match.getLeagueName(),
                     null
             ));
         }

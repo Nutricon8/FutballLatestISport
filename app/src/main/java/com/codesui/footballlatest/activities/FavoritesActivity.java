@@ -41,7 +41,7 @@ public class FavoritesActivity extends AppCompatActivity {
         appOpenManager = new AppOpenManager();
         appOpenManager.loadAd(this);
 
-        String url = "https://api.football-data.org/v4/competitions/PL/teams";
+        String url = "https://isport-api-production.up.railway.app/api/isports/teams?leagueId=133";
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 

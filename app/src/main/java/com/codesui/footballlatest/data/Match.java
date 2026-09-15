@@ -2,103 +2,70 @@ package com.codesui.footballlatest.data;
 
 public class Match {
 
-    private final String id;
-    private final int leagueId;
-    private final String leagueCode;
+    private final String matchId;
+    private final String leagueId;
     private final String leagueName;
-    private final String leagueLogo;
-    private final String homeTeam;
-    private final String awayTeam;
-    private final String homeImage;
-    private final String awayImage;
-    private String homeScore;
-    private String awayScore;
-    private final String date;
-    private final String status;
-    private final String minute;
+    private final String homeTeamId;
+    private final String homeTeamName;
+    private final String homeTeamLogo;
+    private int homeScore;
+    private final String awayTeamId;
+    private final String awayTeamName;
+    private final String awayTeamLogo;
+    private int awayScore;
+    private final int status;
+    private final long matchTime;
+    private final String kickoff;
 
-    public Match(String id, int leagueId, String leagueCode, String leagueName, String leagueLogo, String homeTeam, String awayTeam, String homeImage, String awayImage, String homeScore, String awayScore, String date, String status, String minute) {
-        this.id = id;
+    public Match(String matchId, String leagueId, String leagueName,
+                 String homeTeamId, String homeTeamName, String homeTeamLogo, int homeScore,
+                 String awayTeamId, String awayTeamName, String awayTeamLogo, int awayScore,
+                 int status, long matchTime, String kickoff) {
+        this.matchId = matchId;
         this.leagueId = leagueId;
-        this.leagueCode = leagueCode;
         this.leagueName = leagueName;
-        this.leagueLogo = leagueLogo;
-        this.homeTeam = homeTeam;
-        this.awayTeam = awayTeam;
-        this.homeImage = homeImage;
-        this.awayImage = awayImage;
+        this.homeTeamId = homeTeamId;
+        this.homeTeamName = homeTeamName;
+        this.homeTeamLogo = homeTeamLogo;
         this.homeScore = homeScore;
+        this.awayTeamId = awayTeamId;
+        this.awayTeamName = awayTeamName;
+        this.awayTeamLogo = awayTeamLogo;
         this.awayScore = awayScore;
-        this.date = date;
         this.status = status;
-        this.minute = minute;
+        this.matchTime = matchTime;
+        this.kickoff = kickoff;
     }
 
+    public String getMatchId() { return matchId; }
 
-    public String getId() {
-        return id;
-    }
+    public String getLeagueId() { return leagueId; }
 
-    public int getLeagueId() {
-        return leagueId;
-    }
+    public String getLeagueName() { return leagueName; }
 
-    public String getLeagueCode() {
-        return leagueCode;
-    }
+    public String getHomeTeamId() { return homeTeamId; }
 
-    public String getLeagueName() {
-        return leagueName;
-    }
+    public String getHomeTeamName() { return homeTeamName; }
 
-    public String getLeagueLogo() {
-        return leagueLogo;
-    }
+    public String getHomeTeamLogo() { return homeTeamLogo; }
 
-    public String getHomeTeam() {
-        return homeTeam;
-    }
+    public int getHomeScore() { return homeScore; }
 
-    public String getAwayTeam() {
-        return awayTeam;
-    }
+    public void setHomeScore(int homeScore) { this.homeScore = homeScore; }
 
-    public String getHomeImage() {
-        return homeImage;
-    }
+    public String getAwayTeamId() { return awayTeamId; }
 
-    public String getAwayImage() {
-        return awayImage;
-    }
+    public String getAwayTeamName() { return awayTeamName; }
 
-    public String getHomeScore() {
-        return homeScore;
-    }
+    public String getAwayTeamLogo() { return awayTeamLogo; }
 
-    public String getAwayScore() {
-        return awayScore;
-    }
+    public int getAwayScore() { return awayScore; }
 
-    public void setHomeScore(String homeScore) {
-        this.homeScore = homeScore;
-    }
+    public void setAwayScore(int awayScore) { this.awayScore = awayScore; }
 
-    public void setAwayScore(String awayScore) {
-        this.awayScore = awayScore;
-    }
+    public int getStatus() { return status; }
 
-    public String getDate() {
-        return date;
-    }
+    public long getMatchTime() { return matchTime; }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public String getMinute() {return minute;}
-
-    public boolean hasMinute() {
-        return minute != null && !minute.isEmpty();
-    }
-
+    public String getKickoff() { return kickoff; }
 }

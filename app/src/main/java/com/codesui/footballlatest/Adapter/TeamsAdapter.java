@@ -36,7 +36,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Team team = this.teamList.get(position);
-        Picasso.get().load(team.getImage()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.imageTeam);
+        Picasso.get().load(team.getLogo()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.imageTeam);
         holder.textTeam.setText(team.getName());
         if (team.isFavorite()) {
             holder.buttonFavorite.setImageResource(R.drawable.baseline_star_24); // Filled star
@@ -46,9 +46,9 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
 
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, TeamDetailActivity.class);
-            intent.putExtra("teamId", team.getId());
+            intent.putExtra("teamId", team.getTeamId());
             intent.putExtra("teamName", team.getName());
-            intent.putExtra("teamCrest", team.getImage());
+            intent.putExtra("teamLogo", team.getLogo());
             context.startActivity(intent);
         });
 

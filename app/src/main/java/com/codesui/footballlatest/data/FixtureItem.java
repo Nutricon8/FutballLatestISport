@@ -6,15 +6,13 @@ public class FixtureItem {
 
     private final int type;
     private final Match match;
-    private final int leagueId;
-    private final String leagueCode;
+    private final String leagueId;
     private final String leagueName;
     private final String leagueLogo;
 
-    public FixtureItem(int type, int leagueId, String leagueCode, Match match, String leagueName, String leagueLogo) {
+    public FixtureItem(int type, String leagueId, Match match, String leagueName, String leagueLogo) {
         this.type = type;
         this.leagueId = leagueId;
-        this.leagueCode = leagueCode;
         this.match = match;
         this.leagueName = leagueName;
         this.leagueLogo = leagueLogo;
@@ -24,12 +22,8 @@ public class FixtureItem {
         return type;
     }
 
-    public int getLeagueId() {
+    public String getLeagueId() {
         return leagueId;
-    }
-
-    public String getLeagueCode() {
-        return leagueCode;
     }
 
     public Match getMatch() {

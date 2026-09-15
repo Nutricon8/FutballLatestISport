@@ -1,37 +1,32 @@
 package com.codesui.footballlatest.data;
 
 public class League {
-    private final String leagueName;
-    private final String leagueArena;
-    private final int leagueId;
-    private final String code;
-    private final String leagueImage;
+    private final String leagueId;
+    private final String name;
+    private final String shortName;
+    private final String logo;
 
-    public League(String name, String arena, int id, String code, String leagueImage) {
-        this.leagueName = name;
-        this.leagueArena = arena;
-        this.leagueId = id;
-        this.code = code;
-        this.leagueImage = leagueImage;
+    public League(String leagueId, String name, String shortName, String logo) {
+        this.leagueId = leagueId;
+        this.name = name;
+        this.shortName = shortName;
+        this.logo = logo;
     }
 
-    public String getLeagueName() {
-        return leagueName;
-    }
-
-    public String getLeagueArena() {
-        return leagueArena;
-    }
-
-    public String getLeagueImage() {
-        return leagueImage;
-    }
-
-    public int getLeagueId() {
+    public String getLeagueId() {
         return leagueId;
     }
 
-    public String getCode() {
-        return code;
+    public String getName() {
+        return name;
     }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
 }

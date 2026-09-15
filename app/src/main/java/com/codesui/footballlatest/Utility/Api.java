@@ -22,7 +22,6 @@ import com.codesui.footballlatest.Adapter.PlayersAdapter;
 import com.codesui.footballlatest.Adapter.StandingsAdapter;
 import com.codesui.footballlatest.Adapter.TeamsAdapter;
 import com.codesui.footballlatest.R;
-import com.codesui.footballlatest.data.FilterLeague;
 import com.codesui.footballlatest.data.FixtureItem;
 import com.codesui.footballlatest.data.League;
 import com.codesui.footballlatest.data.Match;
@@ -65,11 +64,10 @@ public class Api {
                         JSONArray jsonArray = response.getJSONArray("competitions");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             League item = new League(
-                                    jsonArray.getJSONObject(i).getJSONObject("area").getString("name"),
+                                    jsonArray.getJSONObject(i).getString("leagueId"),
                                     jsonArray.getJSONObject(i).getString("name"),
-                                    jsonArray.getJSONObject(i).getInt("id"),
-                                    jsonArray.getJSONObject(i).getString("code"),
-                                    jsonArray.getJSONObject(i).getString("emblem"));
+                                    jsonArray.getJSONObject(i).getString("shortName"),
+                                    jsonArray.getJSONObject(i).getString("logo"));
                             leagueList.add(item);
                         }
                         leaguesAdapter.notifyDataSetChanged();
@@ -119,12 +117,18 @@ public class Api {
         @SuppressLint("NotifyDataSetChanged") JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, response -> {
                     try {
-                        JSONArray jsonArray = response.getJSONArray("teams");
+                        JSONArray jsonArray = response.getJSONArray("data");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            Team team = new Team(jsonObject.getString("name"),
-                                    jsonObject.getString("crest"),
-                                    jsonObject.getInt("id"), false);
+                            Team team = new Team(
+                                    jsonObject.getString("teamId"),
+                                    jsonObject.getString("leagueId"),
+                                    jsonObject.getString("name"),
+                                    jsonObject.getString("shortName"),
+                                    jsonObject.getString("logo"),
+                                    jsonObject.getString("foundingDate"),
+                                    false
+                            );
                             teamList.add(team);
                         }
                         teamsAdapter.notifyDataSetChanged();
@@ -301,26 +305,25 @@ public class Api {
         @SuppressLint("NotifyDataSetChanged") JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, response -> {
                     try {
-                        JSONArray jsonArray = response.getJSONArray("matches");
+                        JSONArray jsonArray = response.getJSONArray("data");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             Match match = new Match(
-                                    jsonObject.getString("id"),
-                                    jsonObject.getJSONObject("competition").getInt("id"),
-                                    jsonObject.getJSONObject("competition").getString("code"),
-                                    jsonObject.getJSONObject("competition").getString("name"),
-                                    jsonObject.getJSONObject("competition").optString("emblem", null),
-                                    jsonObject.getJSONObject("homeTeam").getString("shortName"),
-                                    jsonObject.getJSONObject("awayTeam").getString("shortName"),
-                                    jsonObject.getJSONObject("homeTeam").getString("crest"),
-                                    jsonObject.getJSONObject("awayTeam").getString("crest"),
-                                    jsonObject.getJSONObject("score").getJSONObject("fullTime").getString("home"),
-                                    jsonObject.getJSONObject("score").getJSONObject("fullTime").getString("away"),
-                                    jsonObject.getString("utcDate"), jsonObject.getString("status"), jsonObject.optString("minute", null));
-                            if (jsonObject.getJSONObject("score").getJSONObject("fullTime").getString("home").equals("null")) {
-                                match.setHomeScore("");
-                                match.setAwayScore("");
-                            }
+                                    jsonObject.getString("matchId"),
+                                    jsonObject.getString("leagueId"),
+                                    jsonObject.getString("leagueName"),
+                                    jsonObject.getString("homeTeamId"),
+                                    jsonObject.getString("homeTeamName"),
+                                    jsonObject.getString("homeTeamLogo"),
+                                    jsonObject.optInt("homeScore", 0),
+                                    jsonObject.getString("awayTeamId"),
+                                    jsonObject.getString("awayTeamName"),
+                                    jsonObject.getString("awayTeamLogo"),
+                                    jsonObject.optInt("awayScore", 0),
+                                    jsonObject.optInt("status", -1),
+                                    jsonObject.optLong("matchTime", 0L),
+                                    jsonObject.optString("kickoff", "")
+                            );
 
                             matchList.add(match);
                         }
@@ -337,31 +340,31 @@ public class Api {
                             return m1.getLeagueName().compareTo(m2.getLeagueName());
                         });
 
+                        // Build a unique list of leagues from matches
+                        Set<String> seenLeagueIds = new HashSet<>();
+                        List<League> leagueList = new ArrayList<>();
 
-// Build a unique list of leagues from matches
-                        Set<Integer> seenLeagueIds = new HashSet<>();
-                        List<FilterLeague> leagueList = new ArrayList<>();
-
-// Add "All Leagues" as the first item
-                        leagueList.add(new FilterLeague(-1, "All Leagues", null));
+                        // Add "All Leagues" as the first item
+                        leagueList.add(new League("", "All Leagues", "All", ""));
 
                         for (Match match : matchList) {
                             if (!seenLeagueIds.contains(match.getLeagueId())) {
-                                leagueList.add(new FilterLeague(
+                                leagueList.add(new League(
                                         match.getLeagueId(),
                                         match.getLeagueName(),
-                                        match.getLeagueLogo()
+                                        match.getLeagueName(),
+                                        match.getLeagueName()
                                 ));
                                 seenLeagueIds.add(match.getLeagueId());
                             }
                         }
 
-// Set up horizontal RecyclerView
+                        // Set up horizontal RecyclerView
                         LeagueFilterAdapter leagueFilterAdapter = new LeagueFilterAdapter(leagueList, selectedLeagueId -> {
-                            List<Match> filtered = selectedLeagueId == -1
+                            List<Match> filtered = selectedLeagueId.equals("")
                                     ? matchList
                                     : matchList.stream()
-                                    .filter(m -> m.getLeagueId() == selectedLeagueId)
+                                    .filter(m -> m.getLeagueId().equals(selectedLeagueId))
                                     .collect(Collectors.toList());
 
                             List<FixtureItem> groupedFiltered = FixturesAdapter.groupMatchesByLeague(filtered);
@@ -427,22 +430,21 @@ public class Api {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             Match match = new Match(
-                                    jsonObject.getString("id"),
-                                    jsonObject.getJSONObject("competition").getInt("id"),
-                                    jsonObject.getJSONObject("competition").getString("code"),
-                                    jsonObject.getJSONObject("competition").getString("name"),
-                                    jsonObject.getJSONObject("competition").optString("emblem", ""),
-                                    jsonObject.getJSONObject("homeTeam").getString("shortName"),
-                                    jsonObject.getJSONObject("awayTeam").getString("shortName"),
-                                    jsonObject.getJSONObject("homeTeam").getString("crest"),
-                                    jsonObject.getJSONObject("awayTeam").getString("crest"),
-                                    jsonObject.getJSONObject("score").getJSONObject("fullTime").getString("home"),
-                                    jsonObject.getJSONObject("score").getJSONObject("fullTime").getString("away"),
-                                    jsonObject.getString("utcDate"), jsonObject.getString("status"), jsonObject.optString("minute", null));
-                            if (jsonObject.getJSONObject("score").getJSONObject("fullTime").getString("home").equals("null")) {
-                                match.setHomeScore("?");
-                                match.setAwayScore("?");
-                            }
+                                    jsonObject.getString("matchId"),
+                                    jsonObject.getString("leagueId"),
+                                    jsonObject.getString("leagueName"),
+                                    jsonObject.getString("homeTeamId"),
+                                    jsonObject.getString("homeTeamName"),
+                                    jsonObject.getString("homeTeamLogo"),
+                                    jsonObject.optInt("homeScore", 0),
+                                    jsonObject.getString("awayTeamId"),
+                                    jsonObject.getString("awayTeamName"),
+                                    jsonObject.getString("awayTeamLogo"),
+                                    jsonObject.optInt("awayScore", 0),
+                                    jsonObject.optInt("status", -1),
+                                    jsonObject.optLong("matchTime", 0L),
+                                    jsonObject.optString("kickoff", "")
+                            );
 
                             matchList.add(match);
                         }

@@ -11,22 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codesui.footballlatest.R;
-import com.codesui.footballlatest.data.FilterLeague;
+import com.codesui.footballlatest.data.League;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class LeagueFilterAdapter extends RecyclerView.Adapter<LeagueFilterAdapter.LeagueViewHolder> {
 
-    private final List<FilterLeague> leagueItems;
+    private final List<League> leagueItems;
     private final OnLeagueClickListener listener;
     private int selectedPosition = 0; // "All Leagues" selected by default
 
     public interface OnLeagueClickListener {
-        void onLeagueClick(int leagueId);
+        void onLeagueClick(String leagueId);
     }
 
-    public LeagueFilterAdapter(List<FilterLeague> leagueItems, OnLeagueClickListener listener) {
+    public LeagueFilterAdapter(List<League> leagueItems, OnLeagueClickListener listener) {
         this.leagueItems = leagueItems;
         this.listener = listener;
     }
@@ -40,7 +40,7 @@ public class LeagueFilterAdapter extends RecyclerView.Adapter<LeagueFilterAdapte
 
     @Override
     public void onBindViewHolder(@NonNull LeagueViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        FilterLeague league = leagueItems.get(position);
+        League league = leagueItems.get(position);
         holder.leagueName.setText(league.getName());
 
         // Load logo or placeholder
@@ -60,7 +60,7 @@ public class LeagueFilterAdapter extends RecyclerView.Adapter<LeagueFilterAdapte
             selectedPosition = position;
             notifyItemChanged(previousPosition);
             notifyItemChanged(selectedPosition);
-            listener.onLeagueClick(league.getId());
+            listener.onLeagueClick(league.getLeagueId());
         });
     }
 

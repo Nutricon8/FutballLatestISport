@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     AppOpenManager appOpenManager;
     ActionBar actionBar;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,24 +62,20 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Fixtures");
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment fragment = null;
-            switch (item.getItemId()) {
-                case R.id.leagues:
-                    fragment = new LeaguesFragment();
-                    toolbar.setTitle("Leagues");
-                    break;
-                case R.id.livescores:
-                    fragment = new LivescoresFragment();
-                    toolbar.setTitle("Live");
-                    break;
-                case R.id.more:
-                    // Open the navigation drawer when "More" is clicked
-                    drawer.openDrawer(GravityCompat.START); // Use GravityCompat.START if the drawer is on the left side
-                    return true; // Return true to indicate event is handled
-                default:
-                    fragment = new FixturesFragment();
-                    toolbar.setTitle("Fixtures");
-                    break;
-
+            int itemId = item.getItemId();
+            if (itemId == R.id.leagues) {
+                fragment = new LeaguesFragment();
+                toolbar.setTitle("Leagues");
+            } else if (itemId == R.id.livescores) {
+                fragment = new LivescoresFragment();
+                toolbar.setTitle("Live");
+            } else if (itemId == R.id.more) {
+                // Open the navigation drawer when "More" is clicked
+                drawer.openDrawer(GravityCompat.START); // Use GravityCompat.START if the drawer is on the left side
+                return true; // Return true to indicate event is handled
+            } else {
+                fragment = new FixturesFragment();
+                toolbar.setTitle("Fixtures");
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
             return true; // Return true to indicate event is handled
@@ -110,30 +105,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         UrlManager urlManager = new UrlManager(MainActivity.this);
-        switch (item.getItemId()) {
-            case R.id.nav_terms:
-                drawer.closeDrawer(GravityCompat.START);
-                urlManager.openTerms();
-                return true;
-            case R.id.nav_share:
-                drawer.closeDrawer(GravityCompat.START);
-                ShareManager shareManager = new ShareManager(this);
-                shareManager.shareApp();
-                return true;
-            case R.id.nav_rate:
-                drawer.closeDrawer(GravityCompat.START);
-                RateManager rateManager = new RateManager(this);
-                rateManager.rate();
-                return true;
-            case R.id.nav_more_apps:
-                drawer.closeDrawer(GravityCompat.START);
-                urlManager.moreApps();
-                return true;
-            default:
-                return false;
+        int itemId = item.getItemId();
+        if (itemId == R.id.nav_terms) {
+            drawer.closeDrawer(GravityCompat.START);
+            urlManager.openTerms();
+            return true;
+        } else if (itemId == R.id.nav_share) {
+            drawer.closeDrawer(GravityCompat.START);
+            ShareManager shareManager = new ShareManager(this);
+            shareManager.shareApp();
+            return true;
+        } else if (itemId == R.id.nav_rate) {
+            drawer.closeDrawer(GravityCompat.START);
+            RateManager rateManager = new RateManager(this);
+            rateManager.rate();
+            return true;
+        } else if (itemId == R.id.nav_more_apps) {
+            drawer.closeDrawer(GravityCompat.START);
+            urlManager.moreApps();
+            return true;
+        } else {
+            return false;
         }
     }
 

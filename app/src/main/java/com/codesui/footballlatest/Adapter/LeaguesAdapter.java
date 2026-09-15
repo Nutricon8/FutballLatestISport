@@ -45,14 +45,14 @@ public class LeaguesAdapter extends RecyclerView.Adapter<LeaguesAdapter.ViewHold
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         final League league = this.competitionList.get(position);
-        holder.leagueName.setText(league.getLeagueName());
-        holder.leagueArena.setText(league.getLeagueArena());
-        Picasso.get().load(league.getLeagueImage()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.competitionImage);
+        holder.leagueName.setText(league.getName());
+        //holder.leagueArena.setText(league.getLeagueArena());
+        Picasso.get().load(league.getLogo()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.competitionImage);
         holder.itemView.setOnClickListener(view -> {
             Intent leagueIntent = new Intent(LeaguesAdapter.this.context, LeagueActivity.class);
-            leagueIntent.putExtra("competitionName", league.getLeagueArena());
-            leagueIntent.putExtra("competitionId", league.getLeagueId());
-            leagueIntent.putExtra("competitionCode", league.getCode());
+            //leagueIntent.putExtra("leagueName", league.getLeagueArena());
+            leagueIntent.putExtra("leagueId", league.getLeagueId());
+            //leagueIntent.putExtra("competitionCode", league.getCode());
             LeaguesAdapter.this.context.startActivity(leagueIntent);
             interstitialManager.showInterstitial(LeaguesAdapter.this.activity);
         });

@@ -59,7 +59,7 @@ public class FixturesFragment extends Fragment {
         dateRecyclerView.setAdapter(dateAdapter);
         dateRecyclerView.scrollToPosition(3); // Center today if needed
 
-        String url = String.format("https://api.football-data.org/v4/matches/?date=%s", currentSelectedDate);
+        String url = String.format("https://isport-api-production.up.railway.app/api/isports/schedule?date=%s", currentSelectedDate);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
@@ -75,7 +75,7 @@ public class FixturesFragment extends Fragment {
         // Listen to date change
         dateAdapter.setOnDateSelectedListener(date -> {
             currentSelectedDate = formatter.format(date);
-            String newUrl = String.format("https://api.football-data.org/v4/matches/?date=%s", currentSelectedDate);
+            String newUrl = String.format("https://isport-api-production.up.railway.app/api/isports/schedule?date=%s", currentSelectedDate);
             api.loadMatches(newUrl, recyclerView, leagueFilterRecycler,progressBar, textEmpty);
         });
 

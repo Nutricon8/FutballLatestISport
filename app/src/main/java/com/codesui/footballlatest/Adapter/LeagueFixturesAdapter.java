@@ -43,14 +43,14 @@ public class LeagueFixturesAdapter extends RecyclerView.Adapter<LeagueFixturesAd
         final Match match = this.matchList.get(position);
 
 
-        holder.textHome.setText(match.getHomeTeam());
-        holder.textAway.setText(match.getAwayTeam());
-        Picasso.get().load(match.getHomeImage()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.homeImage);
-        Picasso.get().load(match.getAwayImage()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.awayImage);
+        holder.textHome.setText(match.getHomeTeamName());
+        holder.textAway.setText(match.getAwayTeamName());
+        Picasso.get().load(match.getHomeTeamLogo()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.homeImage);
+        Picasso.get().load(match.getAwayTeamLogo()).placeholder(R.drawable.image5).error(R.drawable.image5).into(holder.awayImage);
         holder.textHomeResult.setText(match.getHomeScore());
         holder.textAwayResult.setText(match.getAwayScore());
 
-        holder.time.setText(DateUtils.convertUtcToLocalTime(match.getDate()));
+        /*holder.time.setText(DateUtils.convertUtcToLocalTime(match.getDate()));
         if (match.getStatus().equals("LIVE") || match.getStatus().equals("FINISHED") || match.getStatus().equals("IN_PLAY") || match.getStatus().equals("PAUSED")) {
             if (match.getStatus().equals("FINISHED")) {
                 holder.duration.setText(R.string.ft);
@@ -64,11 +64,11 @@ public class LeagueFixturesAdapter extends RecyclerView.Adapter<LeagueFixturesAd
             } else {
                 holder.duration.setText(match.getStatus());
             }
-        }
+        }*/
 
         holder.itemView.setOnClickListener(view -> {
             Intent fixturesIntent = new Intent(LeagueFixturesAdapter.this.context, MatchActivity.class);
-            fixturesIntent.putExtra("id", match.getId());
+            fixturesIntent.putExtra("id", match.getMatchId());
             fixturesIntent.putExtra("status", match.getStatus());
             LeagueFixturesAdapter.this.context.startActivity(fixturesIntent);
             interstitialManager.showInterstitial(LeagueFixturesAdapter.this.activity);

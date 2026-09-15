@@ -56,11 +56,10 @@ public class LeaguesFragment extends Fragment {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 League item = new League(
-                        jsonObject.getJSONObject("area").getString("name"),
+                        jsonObject.getString("leagueId"),
                         jsonObject.getString("name"),
-                        jsonObject.getInt("id"),
-                        jsonObject.getString("code"),
-                        jsonObject.getString("emblem"));
+                        jsonObject.getString("shortName"),
+                        jsonObject.getString("logo"));
                 leagueList.add(item);
             }
 
